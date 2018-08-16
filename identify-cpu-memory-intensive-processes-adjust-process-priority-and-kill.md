@@ -1,0 +1,21 @@
+## Identify CPU/Memory Intensive Processes, Adjust Process Priority and Kill Processes
+- `pgrep`
+- `pkill`
+- default `kill` is SIGTERM (15) and its "nice". It allows the process to finish before it is terminated.
+- `kill -SIGKILL` (9) is immediate
+- SIGHUP, hangup, is used to configure/reload the controlling process of a terminal. Its what happens when you click the X in the upper corner of a window.
+- SIGINT == C-c
+- SIGSTOP cannot be ignored
+- SIGTSTP can be ignored
+- !! start using `w` !!
+- `jobs` shows what background processes are running
+- `ps axo pid,comm,nice` -> cool way to format the ps display
+- "Nice Level" - the niceness of a process
+- niceness means the priority to CPU utilization
+- LOWER niceness = higher priority
+- `ps -u` -> linux/POSIX syntax
+- `ps u`  -> BSD syntax
+- both have different behavior
+- If you are running a web server, like httpd, you might want to set the niceness level of the httpd processes to have a higher priority in order to optimize!
+- niceness level ranges from -20 to 19
+- it's like priority mail

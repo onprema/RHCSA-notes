@@ -1,0 +1,28 @@
+## List, Set and Change Standard UGO/RWX Permissions
+
+- `umask` defines default permissions for newly created files
+- `groupadd GROUP` creates a new group called GROUP
+- `getent group` lists all groups on the system
+- `chown USER:GROUP FILE` changes the ownership (user and group) of FILE
+- `chown :GROUP FILE` only changes the group
+- `chown USER FILE` only changes the user
+- entering a directory with `cd` requires EXEC permissions, not READ
+- `usermod -G GROUP USER` adds the user USER to the group GROUP (may require logging out and logging back in to take effect)
+- users have "primary groups", which is the group that shows up with `ls` when the
+- user creates a file.
+- `newgrp GROUP` changes the users primary group to GROUP
+- `chmod ug+x -R DIR` adds exec perm for DIR and all dirs/files inside DIR
+- `chmod ug+X -R DIR` adds exec perm for directories, BUT NOT FILES inside DIR
+- `setuid` is a permission bit.
+- `passwd` is a command that is owned by root:root, yet any non-root user on the system can execute that command. How? by using `setuid` to set a sticky bit. A sticky bit will execute the file AS THE OWNER.
+- `setgid` is like `setuid` except for the group instead of owner.
+- `chmod u+s FILE` adds a sticky bit for user permissions of FILE
+- `chmod g+s FILE` adds a sticky bit for group permissions of FILE
+- `chmod 4500 FILE` the 4 represents the setuid. This would add a setuid for the user of FILE
+- `chmod 2500 FILE` would add a setuid for the group of FILE
+- `chmod 6500 FILE` would setuid user AND group
+- Sticky bit prevents a user from deleting a file.
+- If a sticky bit is set on a directory it will prevent unauthorized users fromremoving or renaming a directory and files (unless they own it).
+- /tmp has a sticky bit
+- `chmod +t DIR/FILE` will add a sticky bit to it.
+- `chmod 1644 FILE` adds the sticky bit to FILE.

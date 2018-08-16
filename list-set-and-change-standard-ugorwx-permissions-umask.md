@@ -1,0 +1,11 @@
+## List, Set and Change Standard UGO/RWX Permissions: umask
+- `umask` stands for user mask. Its the default setting for new files that are created by users of a system. If you change umask settings it is NOT persistent, by default. So if you restart the system or log out, the settings may be different.
+- "Priveleged Users" are root and users belonging to the "wheel" group.
+- "Non-Priveleged Users" are everyone else.
+- if you are a priveleged user your Primary Group is "wheel"
+- Primary Group == Effective Group
+- processes (like vim) will default to 666 permissions on files
+- processes (like mkdir) will default to 777 perms on directories
+- `umask 006` will change the mask to basically remove RW perms for new files
+- umask with octal notation is kinda like the inverse of chmod.
+- `umask 266` ~= `chmod 400`
