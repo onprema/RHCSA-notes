@@ -1,0 +1,391 @@
+Aug 15 07:22:47: Start enrollment for benefits and other admin tasks for Taos.
+Aug 15 08:31:12: Finish
+
+Aug 15 10:25:13: Begin RHCSA course:
+
+--------------------------------
+"Access Remote Systems Using SSH":
+--------------------------------
+
+`scp` and `stfp` are two secure protocols that use port 22 to transfer files
+to/from remote servers.
+
+
+--------------------------------
+"Log in and Switch Users in Multiuser Targets":
+--------------------------------
+
+a 'target' is a group of config files, or services, that start when the system
+navigates into said target. multi-user.target allows us to have multiple users
+on the system.
+
+interactive shell - a shell that a user types stuff in to
+log-in shell - ~/.bash_profile is a script that runs when a user enters a log-in
+shell.
+
+when you first log in to a system you are in a log-in shell.
+then, if you do `su user2` you enter an interactive shell.
+
+~/.bashrc is executed when you enter into an interactive shell.
+~/.bash_profile is NOT executed in an interactive shell. Only log-in shell.
+
+`su -`
+`su -l`
+`su --login`
+These all represent log-in shell
+
+if you want to log in with the customizations (env) of the current user, do `su`
+if you want to log in and load everything in .bash_profile, do `su -`
+ 
+`/etc/profile` is loaded when *any* user logs in to the system
+every user will have a /home/<user>/.bash_profile where you can customize
+
+
+--------------------------------
+"Archive, Compress, Unpack and Uncompress Files Using tar, star, gzip and bzip2"
+--------------------------------
+
+`tar` does not do compression, it just creates archives. it relies on a 3rd
+party, like `gzip` for compression.
+
+`gzip FILE` compresses FILE and renames it FILE.gz
+`gunzip FILE.gz` decompresses FILE and renames it FILE
+
+you cannot compress a DIRECTORY with `gzip` so you need to create an archive,
+which is just a grouping of all the files in a directory, basically.
+
+`tar -cvf FILE.tar` creates an archive called FILE (not compressed)
+`tar -cvzf FILE.tar.gz` creates a compressed archive using gzip (-z flag)
+
+by default, when you extract a compressed archive with `tar -xvf FILE.tar.gz`,
+it will overwrite any file with the same name. to avoid issues you can use a
+flag (-d): `tar -dvf FILE.tar.gz` which will display the DIFF (d for DIFF)
+between whats in the archive and whats on the current system which will display
+the DIFF (d for DIFF) between whats in the archive and whats on the current
+system.
+
+`star` (which is not installed on RHEL by default) can be used for large data
+sets. And it doesn't overwrite files that are newer than the files in the
+archive. It gives us more protection!
+
+Aug 15 12:26:05: Break
+Aug 15 12:58:33: Resume RHCSA course
+
+
+--------------------------------
+"Create and Edit Text Files"
+--------------------------------
+
+nano, vi, vim
+(already learned this stuff)
+
+
+--------------------------------
+"Create, Delete, Copy and Move Files and Directories"
+--------------------------------
+
+touch, mkdir, rmdir, tree, mv, cp
+(already learned this stuff)
+`cp -R DIR` recursively (copy an entire DIR)
+
+
+--------------------------------
+"Create Hard and Soft Links"
+--------------------------------
+
+symbolic links can link across file systems (partitions on disk).
+
+hard links are links to a specific inode location on a file system. they can't
+cross link to a different file system. they WILL have the same permissions,
+whereas symlinks won't necessary have the same permissions.
+
+
+--------------------------------
+"List, Set and Change Standard UGO/RWX Permissions"
+--------------------------------
+
+`umask` defines default permissions for newly created files
+
+`groupadd GROUP` creates a new group called GROUP
+
+`getent group` lists all groups on the system
+
+`chown USER:GROUP FILE` changes the ownership (user and group) of FILE
+`chown :GROUP FILE` only changes the group
+`chown USER FILE` only changes the user
+
+entering a directory with `cd` requires EXEC permissions, not READ
+
+`usermod -G GROUP USER` adds the user USER to the group GROUP (may require
+logging out and logging back in to take effect)
+
+users have "primary groups", which is the group that shows up with `ls` when the
+user creates a file.
+
+`newgrp GROUP` changes the users primary group to GROUP
+
+`chmod ug+x -R DIR` adds exec perm for DIR and all dirs/files inside DIR
+`chmod ug+X -R DIR` adds exec perm for directories, BUT NOT FILES inside DIR
+
+`setuid` is a permission bit.
+
+`passwd` is a command that is owned by root:root, yet any non-root user on the
+system can execute that command. How? by using `setuid` to set a sticky bit. A
+sticky bit will execute the file AS THE OWNER.
+
+`setgid` is like `setuid` except for the group instead of owner.
+
+`chmod u+s FILE` adds a sticky bit for user permissions of FILE
+`chmod g+s FILE` adds a sticky bit for group permissions of FILE
+
+`chmod 4500 FILE` the 4 represents the setuid. This would add a setuid for the
+user of FILE
+
+`chmod 2500 FILE` would add a setuid for the group of FILE
+
+`chmod 6500 FILE` would setuid user AND group
+
+Sticky bit prevents a user from deleting a file.
+If a sticky bit is set on a directory it will prevent unauthorized users from
+removing or renaming a directory and files (unless they own it).
+
+/tmp has a sticky bit
+
+`chmod +t DIR/FILE` will add a sticky bit to it.
+`chmod 1644 FILE` adds the sticky bit to FILE.
+
+Aug 15 14:51:08: break
+Aug 15 15:20:49: Continue RHCSA course
+
+
+--------------------------------
+"List, Set and Change Standard UGO/RWX Permissions: umask"
+--------------------------------
+
+`umask` stands for user mask. Its the default setting for new files that are
+created by users of a system. If you change umask settings it is NOT persistent,
+by default. So if you restart the system or log out, the settings may be
+different.
+
+"Priveleged Users" are root and users belonging to the "wheel" group.
+"Non-Priveleged Users" are everyone else.
+
+if you are a priveleged user your Primary Group is "wheel"
+
+Primary Group == Effective Group
+
+processes (like vim) will default to 666 permissions on files
+processes (like mkdir) will default to 777 perms on directories
+
+`umask 006` will change the mask to basically remove RW perms for new files
+
+umask with octal notation is kinda like the inverse of chmod.
+`umask 266` ~= `chmod 400`
+
+--------------------------------
+"Locate, Read and Use System Documentation with man, info and /usr/share/doc"
+--------------------------------
+
+`man passwd` - man page for /usr/bin/passwd
+
+`man 5 passwd` - man page for /etc/passwd config file
+
+`apropos PATTERN` - finds man pages that match PATTERN
+
+`mandb` updates/indexes everything in /usr/share/man -- you might need to do
+this if `apropos PATTERN` doesn't return anything
+
+`info` reads from /usr/share/info
+`info COMMAND` will default to `man COMMAND` if there is no info page for
+COMMAND
+
+when inside `info` you can use '?' to get help navigating around
+`info` is a GUI, you bring the cursor to a line and press enter to move into it
+
+`info --apropos=PATTERN` searches for info pages matching PATTERN.
+
+`info coreutils tee` will bring up the info page for `tee`, under the coreutils
+Node.
+
+if a command doesn't have man or info pages, try --help, -h, or look in
+/usr/share/doc
+
+`locate passwd` searches the whole system for files related to passwd. it
+searches a cached database, which can be updated via `updatedb`
+
+`updatedb` runs once a day (default setting) via cron
+
+`whatis passwd` searches man page DESCRIPTIONS (not titles)
+
+`whereis passwd` displays location of executable AND documentation
+
+`rpm -q -d PACKAGE` Queries the Documentation for PACKAGE
+
+Aug 15 17:27:44: break
+Aug 15 17:35:35: Continue RHCSA
+
+--------------------------------
+"Finding Files with Locate and Find"
+--------------------------------
+
+`find . -mtime -3` find all files in CWD that have been Modified within the last
+3 days
+
+`find . -mtime +3` find all files in CWD that have been Modified greater than 3
+days ago
+
+`find / -user jeff -type f -exec stat {} \;` -- V.POWERFUL. This will find all
+files owned by 'jeff' and then execute `stat` on each one. Note that the "\;" is
+part of the syntax.
+
+Aug 15 18:16:18: break
+Aug 15 19:21:04: continue with Section 2 Exercises
+Aug 15 19:53:55: finished exercises
+Aug 16 09:33:38: Resume RHCSA
+
+--------------------------------
+"Boot, Reboot and Shutdown a System"
+--------------------------------
+
+`reboot` shuts down the OS, goes through Grub initialization process, ramfs,
+restarts services, then hands control over to systemd. `systemctl reboot` is the
+same.
+
+`shutdown -r +5 System will reboot` invokes the `wall` command to announce to
+all the users on the system that there will be a reboot in 5 minutes.
+
+`shutdown -c` cancels reboot and lets users know it was cancelled cancels reboot
+and lets users know it was cancelled.
+
+`shutdown -r 00:00` will shutdown at midnight
+
+`init 0` will shutdown the system. it's being depricated but still used for
+backwards-compatibility
+
+"targets" have replaces "run levels"
+a target is what our system navigates in an out of to shutdown a system
+targets are at /usr/lib/systemd/system
+
+--------------------------------
+"Boot Systems into Different Targets Manually"
+--------------------------------
+
+Targets are dependency groupings
+
+`systemctl list-units --type=target` lists all targets on the system
+
+the .service files in /usr/lib/systemd/system are SERVICES. They are
+configuration files that represent services. They have replaced bash scripts.
+They are what systemd reads to run services.
+
+After: lists units that need to be started before the service can run.
+WantedBy: when a service is `enable`d by systemd, it will be added to whatever
+follows WantedBy=________.
+
+For example,
+
+WantedBy=multi-user.target -- when the system moved into the multi-user target,
+THEN the configuration file will be opened/executed.
+
+`systemctl list-dependencies multi-user.target` lists the dependency tree of the
+multi-user target
+
+multi-user.target: multiple users can be logged in -- text-based interface
+graphical.target: GUI
+emergency.target: boots us into a root command prompt and mounts a read-only FS
+rescue.target: used for troubleshooting
+
+graphical.target
+|-> multi-user.target
+
+whenever graphical.target is called, it will call multi-user.target, too.
+
+`systemctl isolate NAME` switches to NAME.target, but only if AllowIsolate=yes
+is set in the target's config.
+
+`systemctl isolate graphical.target` will start everything required to run the
+graphical interface
+
+`systemctl get-default` shows default target
+`systemctl set-default NAME` sets the default target to NAME.target
+
+`/etc/systemd/system` additional configuration files that will overwrite
+anything with the same name in /usr/lib/systemd/system
+
+!!!!!!!!!!!!!
+Manually changing the target that starts on boot.
+1. `reboot`
+2. press any key to interrupt boot sequence
+3. edit the linux version you want to edit
+4. find line that starts with linux16... (invoking the kernel)
+5. append systemd.unit=NAME.target at the end of that line
+6. press C-x to continue booting
+... Now the system will boot in whatever target you specified in step 5
+!!!!!!!!!!!!!!
+For example, you could go from graphical.target to multi-user.target if you
+wanted to have a non-GUI experience. Or multi-user.target to rescue.target for
+troubleshooting.
+
+--------------------------------
+"Interrupt the Boot Process to Gain Access to a System"
+--------------------------------
+
+Reset your root password.
+Must be in front of physical machine or virtualized machine because we need the
+grub boot menu.
+1. `reboot`
+2. press any key
+3. select the kernel you want to boot into
+4. press `e` to edit config
+5. search for the line that starts with linux16...
+6. append `rd.break` at the end of the line
+|---> this enters you in initramfs bebug shell
+7. press C-x to resume boot process, you will be brought to a prompt
+8. `mount -oremount,rw /sysroot` -> gives rw perm on /sysroot
+9. `chroot /sysroot` -> now /sysroot is acting as /
+10. `passwd` to change the root password
+11. touch /.autorelabel -> required for selinux to successfully change root pw
+12. `exit` leaves initramfs shell and reboots the system
+
+--------------------------------
+"Identify CPU/Memory Intensive Processes, Adjust Process Priority and Kill
+Processes"
+--------------------------------
+
+`pgrep`
+
+`pkill`
+
+default `kill` is SIGTERM (15) and its "nice". It allows the process to finish
+before it is terminated.
+
+`kill -SIGKILL` (9) is immediate
+
+SIGHUP, hangup, is used to configure/reload the controlling process of a
+terminal. Its what happens when you click the X in the upper corner of a window.
+
+SIGINT == C-c
+
+SIGSTOP cannot be ignored
+SIGTSTP can be ignored
+
+!! start using `w` !!
+
+`jobs` shows what background processes are running
+
+`ps axo pid,comm,nice` -> cool way to format the ps display
+
+"Nice Level" - the niceness of a process
+niceness means the priority to CPU utilization
+LOWER niceness = higher priority
+
+`ps -u` -> linux/POSIX syntax
+`ps u`  -> BSD syntax
+both have different behavior
+
+If you are running a web server, like httpd, you might want to set the niceness
+level of the httpd processes to have a higher priority in order to optimize!
+
+niceness level ranges from -20 to 19
+
+it's like priority mail
