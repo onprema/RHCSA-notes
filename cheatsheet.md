@@ -64,13 +64,28 @@
 ### Mounting a CIFS with samba
 1. `yum install samba samba-client cifs-utils nfs-utils`
 
-### Mounting shares in /etc/fstab
+### Mounting cifs & nfs
+Install packages:
+- `yum install samba samba-client samba-comoon cifs-utils nfs-utils`
+CLI:
+- `mount -t cifs -o username=user //10.0.1.250/public /mnt/sambashare`
+- `mount -t nfs 10.0.1.250:/nfsshare /mnt/nfsshare`
+fstab:
 ```
-UUID=123 / xfs defaults 1 1
 //10.0.1.250/public /mnt/sambashare cifs username=user,password=pass 0 0
 10.0.1.250:/nfsshare /mnt/nfsshare nfs defaults 0 0
 ```
 Always check `mount -a` for errors before rebooting
 
 ### Configure LDAP
-?
+- `yum install authconfig-gtk`
+- `yum groupinstall "Directory Client"`
+- `yum install autofs openldap-clients nfs-utils`
+- create `vim /etc/auto.master.d/ldap.autofs`
+    - add `/home/guests /etc/auto.ldap`
+- create `vim /etc/auto.ldap`
+    - add `* -rw ldap.linuxacademy.com:/home/guests/&`
+- `vim /etc/pam.d/sshd`
+    - add `auth  sufficient  pam_ldap.so`
+    - add `auth  sufficient  pam_permit.so`
+- `systemctl start autofs && systemctl enable autofs && systemctl restart sshd`
