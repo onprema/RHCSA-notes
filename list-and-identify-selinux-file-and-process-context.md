@@ -33,5 +33,5 @@ drwxr-xr-x. root root system_u:object_r:httpd_sys_content_t:s0 html
 `restorecon FILE` will set the security context for a FILE based on where it is
 in the filesystem to the default SELinux settings.
 
-`/.autorelable` is a file in `/` that will configure SELinux to _relable_ every
+`/.autorelabel` is a file in `/` that will configure SELinux to _relabel_ every
 file on our filesystem when we reboot.
